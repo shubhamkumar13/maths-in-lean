@@ -42,13 +42,22 @@ example (a b c d e f : ℝ) (h : a * b = c * d) (h' : e = f) : a * (b * e) = c *
   rw [mul_assoc]
 
 example (a b c d e f : ℝ) (h : b * c = e * f) : a * b * c * d = a * e * f * d := by
-  sorry
+  rw [mul_assoc a b c]
+  rw [h]
+  rw [mul_assoc a e f]
 
 example (a b c d : ℝ) (hyp : c = b * a - d) (hyp' : d = a * b) : c = 0 := by
-  sorry
+  rw [hyp]
+  rw [hyp']
+  rw [mul_comm b a]
+  rw [sub_self]
 
 example (a b c d e f : ℝ) (h : a * b = c * d) (h' : e = f) : a * (b * e) = c * (d * f) := by
-  rw [h', ← mul_assoc, h, mul_assoc]
+  rw [h']
+  rw [← mul_assoc a b]
+  rw [h]
+  rw [mul_assoc c d f]
+
 
 section
 
@@ -70,7 +79,8 @@ variable (a b c : ℝ)
 #check mul_assoc c a b
 #check mul_comm a
 #check mul_comm
-
+#check add_mul
+#check mul_two
 end
 
 section
@@ -93,12 +103,15 @@ example : (a + b) * (a + b) = a * a + 2 * (a * b) + b * b :=
 example : (a + b) * (a + b) = a * a + 2 * (a * b) + b * b :=
   calc
     (a + b) * (a + b) = a * a + b * a + (a * b + b * b) := by
-      sorry
+      rw [mul_add]
+      rw [add_mul, add_mul]
     _ = a * a + (b * a + a * b) + b * b := by
-      sorry
+      rw [mul_comm a b]
+      rw [<- add_assoc (a * a + b * a)]
+      rw [add_assoc (a * a)]
     _ = a * a + 2 * (a * b) + b * b := by
-      sorry
-
+      rw [mul_comm b a]
+      rw [two_mul]
 end
 
 -- Try these. For the second, use the theorems listed underneath.
