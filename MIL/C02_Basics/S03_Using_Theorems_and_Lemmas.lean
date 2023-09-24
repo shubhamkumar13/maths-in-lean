@@ -125,10 +125,10 @@ theorem fact1 : a * b * 2 ≤ a ^ 2 + b ^ 2 := by
     _ = a ^ 2 + b ^ 2 := by ring
 
 
-theorem fact2 : 2 * a * b ≤ a ^ 2 + b ^ 2 := by
-  have h : 0 ≤ a ^ 2 - 2 * a * b + b ^ 2
+theorem fact2 : - (a * b) * 2 ≤ a ^ 2 + b ^ 2 := by
+  have h : 0 ≤ a ^ 2 + 2 * a * b + b ^ 2
   calc
-    a ^ 2 - 2 * a * b + b ^ 2 = (a - b) ^ 2 := by ring
+    a ^ 2 + 2 * a * b + b ^ 2 = (a + b) ^ 2 := by ring
     _ ≥ 0 := by apply pow_two_nonneg
   linarith
 
@@ -138,6 +138,7 @@ example : |a * b| ≤ (a ^ 2 + b ^ 2) / 2 := by
   constructor
   · rw [le_div_iff h]
     apply fact1
-  sorry
+  · rw [le_div_iff h]
+    apply fact2
 
 #check abs_le'.mpr
