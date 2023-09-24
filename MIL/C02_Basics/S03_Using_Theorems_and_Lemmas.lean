@@ -77,6 +77,7 @@ example (h : 1 ≤ a) (h' : b ≤ c) : 2 + a + exp b ≤ 3 * a + exp c := by
 #check (add_pos_of_pos_of_nonneg : 0 < a → 0 ≤ b → 0 < a + b)
 #check (exp_pos : ∀ a, 0 < exp a)
 #check add_le_add_left
+#check exp_pos
 
 example (h : a ≤ b) : exp a ≤ exp b := by
   rw [exp_le_exp]
@@ -88,13 +89,17 @@ example (h₀ : a ≤ b) (h₁ : c < d) : a + exp c + e < b + exp d + e := by
     apply exp_lt_exp.mpr h₁
   apply le_refl
 
-example (h₀ : d ≤ e) : c + exp (a + d) ≤ c + exp (a + e) := by sorry
+example (h₀ : d ≤ e) : c + exp (a + d) ≤ c + exp (a + e) := by
+  apply add_le_add_left
+  apply exp_le_exp.mpr
+  apply add_le_add_left
+  apply h₀
 
 example : (0 : ℝ) < 1 := by norm_num
 
 example (h : a ≤ b) : log (1 + exp a) ≤ log (1 + exp b) := by
-  have h₀ : 0 < 1 + exp a := by sorry
-  have h₁ : 0 < 1 + exp b := by sorry
+  have h₀ : 0 < 1 + exp a := by linarith [exp_pos a]
+  have h₁ : 0 < 1 + exp b := by linarith [exp_pos b]
   apply (log_le_log h₀ h₁).mpr
   apply add_le_add_left (exp_le_exp.mpr h)
 
@@ -115,12 +120,12 @@ theorem fact1 : a * b * 2 ≤ a ^ 2 + b ^ 2 := by
 
   calc
     a * b * 2 = a * b * 2 + 0 := by ring
-    _ ≤ 2 * a * b + (a ^ 2 - 2 * a * b + b ^ 2) :=
+    _ ≤ a * b * 2 + (a ^ 2 - 2 * a * b + b ^ 2) :=
       add_le_add (le_refl _) h
     _ = a ^ 2 + b ^ 2 := by ring
 
 
-example : 2 * a * b ≤ a ^ 2 + b ^ 2 := by
+theorem fact2 : 2 * a * b ≤ a ^ 2 + b ^ 2 := by
   have h : 0 ≤ a ^ 2 - 2 * a * b + b ^ 2
   calc
     a ^ 2 - 2 * a * b + b ^ 2 = (a - b) ^ 2 := by ring
